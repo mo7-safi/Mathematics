@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحاضرة الثانية - رياضيات | Cyber Flashcards Pro</title>
+    
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: false
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            /* Palette */
+            --bg-deep: #050505;
+            --bg-grid: #0a0a0a;
+            --card-bg: rgba(20, 22, 31, 0.7);
+            --primary-purple: #bd00ff;
+            --primary-cyan: #00f2ff;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            
+            --font-main: 'Cairo', sans-serif;
+            --base-font-size: 19px;
+            --card-height: 420px;
+        }
+
+        [data-theme="light"] {
+            --bg-deep: #f8f9fa;
+            --bg-grid: #e9ecef;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --primary-purple: #8e24aa;
+            --primary-cyan: #00acc1;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --glass-border: rgba(0, 0, 0, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            
+            /* Cyber Grid Background */
+            background-image: 
+                linear-gradient(rgba(189, 0, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center top;
+        }
+
+        /* Ambient Glow in Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 50vh;
+            background: radial-gradient(circle, rgba(189,0,255,0.15) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            padding: 25px 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .logo-container {
+            width: 120px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+        .logo-container:hover { transform: scale(1.05); }
+        .logo-container img { width: 100%; height: auto; drop-shadow: 0 0 15px rgba(0,242,255,0.2); }
+
+        h1 {
+            font-weight: 800;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--primary-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        /* Disclaimer */
+        .disclaimer-badge {
+            font-size: 0.85rem;
+            background: rgba(189, 0, 255, 0.1);
+            border: 1px solid rgba(189, 0, 255, 0.3);
+            color: var(--primary-purple);
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(5px);
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+            max-width: 90%;
+        }
+
+        /* Controls */
+        .controls-wrapper {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            background: var(--card-bg);
+            padding: 8px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-mini {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: var(--font-main);
+            font-weight: 700;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-mini:hover { color: var(--primary-cyan); background: rgba(0, 242, 255, 0.05); }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 90%;
+            max-width: 600px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-purple), var(--primary-cyan));
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 0 10px var(--primary-cyan);
+        }
+
+        /* 3D Scene */
+        .scene {
+            width: 90%;
+            max-width: 650px;
+            height: var(--card-height);
+            perspective: 1500px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.is-flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            text-align: center;
+            font-size: var(--base-font-size);
+            line-height: 1.7;
+            
+            /* Glassmorphism */
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            
+            overflow-y: auto;
+        }
+
+        /* Front Face */
+        .card-face__front {
+            border-bottom: 3px solid var(--primary-cyan);
+        }
+        .card-face__front::before {
+            content: 'السؤال';
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 0.75rem;
+            color: var(--primary-cyan);
+            background: rgba(0, 242, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        /* Back Face */
+        .card-face__back {
+            transform: rotateY(180deg);
+            border-bottom: 3px solid var(--primary-purple);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(189, 0, 255, 0.08) 100%);
+        }
+        .card-face__back::before {
+            content: 'الإجابة';
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 0.75rem;
+            color: var(--primary-purple);
+            background: rgba(189, 0, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        /* Navigation */
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+        
+        .nav-btn:active { transform: scale(0.95); }
+
+        .counter-display {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            background: rgba(0,0,0,0.2);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .hint-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            width: 100%;
+            padding: 25px;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+        }
+        .footer-text {
+            color: #8892b0;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        /* MathJax Customization */
+        mjx-container {
+            color: var(--primary-cyan) !important;
+            font-size: 115% !important;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+        }
+        .card-face__back mjx-container {
+            color: var(--primary-purple) !important;
+            text-shadow: 0 0 10px rgba(189, 0, 255, 0.2);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        
+        @media (max-width: 600px) {
+            .scene { height: 480px; width: 92%; }
+            h1 { font-size: 1.6rem; }
+            .nav-btn { width: 55px; height: 55px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="logo.png" alt="Logo" onerror="this.style.opacity='0'">
+        </div>
+        <h1>المحاضرة الثانية - رياضيات</h1>
+    </header>
+
+    <div class="disclaimer-badge">
+        ملاحظة: هذه الأسئلة تدريبية وليست دورات، وأسئلة الامتحان قد تكون أبسط بكثير أو أصعب و نمط اسئلة الامتحان سيكون تحريري.
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="btn-mini" onclick="toggleTheme()">
+            <span id="theme-icon">☀</span> وضع
+        </button>
+        <div style="width:1px; background:var(--glass-border);"></div>
+        <button class="btn-mini" onclick="adjustFont(2)">A+</button>
+        <button class="btn-mini" onclick="adjustFont(-2)">A-</button>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-fill" id="progress-bar"></div>
+    </div>
+
+    <div class="scene">
+        <div class="card" onclick="flipCard()">
+            <div class="card-face card-face__front">
+                <div id="card-front-content">...</div>
+            </div>
+            <div class="card-face card-face__back">
+                <div id="card-back-content">...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="hint-text">اضغط على البطاقة لقلبها</div>
+
+    <div class="nav-container">
+        <button class="nav-btn" onclick="prevCard()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        
+        <div class="counter-display">
+            <span id="current-index">1</span> / <span id="total-count">40</span>
+        </div>
+
+        <button class="nav-btn" onclick="nextCard()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+    </div>
+
+    <footer>
+        <p class="footer-text">تم تطوير هذا الموقع بواسطة محمد صافي</p>
+    </footer>
+
+    <script>
+        // Full Data Set
+        const flashcardsData = [
+            {"q": "ما هو محدد المصفوفة المربعة $A$؟", "a": "هو قيمة عددية تقابل المصفوفة المربعة $A$، ويُرمز له بـ $|A|$ أو $det(A)$."},
+            {"q": "ما هي صيغة حساب محدد مصفوفة من المرتبة الثانية بالشكل $|\\begin{smallmatrix} a_{11} & a_{12} \\\\ a_{21} & a_{22} \\end{smallmatrix}|$؟", "a": "صيغة الحساب هي $|A| = a_{11}a_{22} - a_{21}a_{12}$."},
+            {"q": "احسب قيمة المحدد $|\\begin{smallmatrix} 2 & 9 \\\\ 1 & 5 \\end{smallmatrix}|$؟", "a": "القيمة هي $(2)(5) - (1)(9) = 10 - 9 = 1$."},
+            {"q": "في الطريقة المباشرة لحساب محدد 3x3، ما هي الحدود الثلاثة التي تُجمع (تُسبق بإشارة موجبة)؟", "a": "الحدود هي: $(a_{11}a_{22}a_{33}) + (a_{12}a_{23}a_{31}) + (a_{13}a_{21}a_{32})$."},
+            {"q": "في الطريقة المباشرة لحساب محدد 3x3، ما هي الحدود الثلاثة التي تُطرح (تُسبق بإشارة سالبة)؟", "a": "الحدود هي: $-(a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})$."},
+            {"q": "ما هي الخطوة الأولى في \"طريقة ساريوس\" لحساب محدد مصفوفة 3x3؟", "a": "إعادة كتابة العمودين الأول والثاني بجانب المصفوفة الأصلية."},
+            {"q": "ما هو ناتج ضرب المصفوفة $A$ في مصفوفتها المساعدة $Γ(A)$؟", "a": "النتيجة هي $A \\cdot Γ(A) = Γ(A) \\cdot A = |A| \\cdot I_n$."},
+            {"q": "ما هي الصيغة العامة لحساب مقلوب المصفوفة $A^{-1}$ باستخدام المحدد والمصفوفة المساعدة؟", "a": "الصيغة هي $A^{-1} = \\frac{1}{|A|} Γ(A)$."},
+            {"q": "ما هو الشرط الأساسي لوجود مقلوب لمصفوفة مربعة؟", "a": "الشرط هو أن تكون المصفوفة نظامية، أي أن محددها لا يساوي الصفر ($|A| \\neq 0$)." },
+            {"q": "ما هي الخطوة الأولى في إيجاد المصفوفة المساعدة $Γ(A)$؟", "a": "الخطوة الأولى هي حساب المتمم الجبري $A_{ij}$ لكل عنصر $a_{ij}$ في المصفوفة $A$."},
+            {"q": "بعد حساب مصفوفة المتممات الجبرية $[A_{ij}]$، ما هي الخطوة التالية لإيجاد المصفوفة المساعدة $Γ(A)$؟", "a": "الخطوة التالية هي إيجاد منقول مصفوفة المتممات الجبرية، أي $Γ(A) = [A_{ij}]^T$."},
+            {"q": "للمصفوفة $A = [\\begin{smallmatrix} 1 & 2 & 1 \\\\ 3 & 2 & -1 \\\\ -1 & 3 & 2 \\end{smallmatrix}]$، قيمة محددها $|A|=8$. ما نوع هذه المصفوفة؟", "a": "بما أن $|A| \\ne 0$، فهي مصفوفة نظامية (غير شاذة)."},
+            {"q": "خاصية مقلوب المصفوفات: $(A^{-1})^{-1} = $ _____؟", "a": "$A$"},
+            {"q": "خاصية مقلوب المصفوفات: $(A^T)^{-1} = $ _____؟", "a": "$(A^{-1})^T$"},
+            {"q": "خاصية مقلوب المصفوفات: $(kA)^{-1} = $ _____ حيث $k$ عدد ثابت لا يساوي صفر؟", "a": "$\\frac{1}{k} A^{-1}$"},
+            {"q": "خاصية مقلوب المصفوفات: $(A \\cdot B)^{-1} = $ _____؟", "a": "$B^{-1} \\cdot A^{-1}$ (عكس الترتيب)"},
+            {"q": "إذا كانت $A$ مصفوفة متناظرة، فإن $A^{-1}$ تكون مصفوفة _____؟", "a": "مصفوفة متناظرة."},
+            {"q": "إذا كانت $A$ مصفوفة مثلثية، فإن $A^{-1}$ تكون مصفوفة _____؟", "a": "مصفوفة مثلثية."},
+            {"q": "قيمة محدد مقلوب المصفوفة: $|A^{-1}| = $ _____؟", "a": "$\\frac{1}{|A|} = |A|^{-1}$"},
+            {"q": "لحل جملة معادلات خطية بالشكل $AX = B$ باستخدام مقلوب المصفوفة، ما هي الصيغة المستخدمة لإيجاد $X$؟", "a": "$X = A^{-1} \\cdot B$"},
+            {"q": "في طريقة غوص، ما هو الهدف الرئيسي من التحويلات السطرية الأولية؟", "a": "تحويل المصفوفة الموسعة $[A|I]$ إلى الشكل $[I|A^{-1}]$."},
+            {"q": "في طريقة غوص، إذا ظهر سطر صفري بالكامل في الجزء الأيسر من المصفوفة الموسعة أثناء التحويل، ماذا يعني ذلك؟", "a": "يعني أن المصفوفة $A$ شاذة (ليس لها مقلوب)."},
+            {"q": "ما هي المصفوفة الموسعة المستخدمة لحل جملة معادلات خطية بطريقة غوص؟", "a": "هي المصفوفة التي تتكون من مصفوفة الأمثال $A$ والطرف الثابت $B$، وتكتب بالشكل $[A|B]$."},
+            {"q": "في طريقة غوص لحل الجمل الخطية، يتم تحويل المصفوفة الموسعة $[A|B]$ إلى الشكل المدرج المختزل. ماذا يمثل العمود الأخير في هذا الشكل؟", "a": "يمثل قيم المجاهيل (الحل)."},
+            {"q": "ما هي \"طريقة كرامر\" لحل الجمل الخطية؟", "a": "هي طريقة تعتمد على المحددات، حيث يُحسب $x_i = \\frac{|A_i|}{|A|}$."},
+            {"q": "في طريقة كرامر، ماذا يمثل الرمز $D$ أو $|A|$؟", "a": "يمثل محدد مصفوفة الأمثال للنظام."},
+            {"q": "في طريقة كرامر، كيف يتم الحصول على المحدد $D_x$ (أو $D_1$)؟", "a": "باستبدال عمود معاملات المجهول $x$ في المحدد الأصلي بعمود الثوابت."},
+            {"q": "إذا كان محدد مصفوفة الأمثال $|A| = 0$، فهل يمكن استخدام طريقة كرامر؟", "a": "لا، طريقة كرامر تتطلب أن يكون $|A| \\neq 0$."},
+            {"q": "حل جملة المعادلات الخطية المتجانسة $AX = 0$ عندما يكون $|A| \\ne 0$ هو _____؟", "a": "الحل الصفري الوحيد (الحل التافه)."},
+            {"q": "إذا كان $|A| = 0$ في جملة معادلات خطية متجانسة $AX = 0$، فماذا نستنتج عن الحلول؟", "a": "للجملة عدد غير منتهٍ من الحلول غير الصفرية."},
+            {"q": "في نظرية روشيه-كابيلي، متى تكون جملة المعادلات الخطية مستحيلة الحل؟", "a": "إذا كانت رتبة المصفوفة $r(A)$ لا تساوي رتبة المصفوفة الموسعة $r(A|B)$."},
+            {"q": "في نظرية روشيه-كابيلي، متى يكون للجملة حل وحيد؟", "a": "إذا كانت $r(A) = r(A|B) = n$ (عدد المجاهيل)."},
+            {"q": "في نظرية روشيه-كابيلي، متى يكون للجملة عدد غير منتهٍ من الحلول؟", "a": "إذا كانت $r(A) = r(A|B) < n$ (عدد المجاهيل)."},
+            {"q": "ما هي القيم الذاتية لمصفوفة مربعة $A$؟", "a": "هي جذور المعادلة المميزة $|A - \\lambda I| = 0$."},
+            {"q": "ما هي الأشعة الذاتية؟", "a": "هي الأشعة غير الصفرية $X$ التي تحقق المعادلة $AX = \\lambda X$."},
+            {"q": "ما هي المعادلة المميزة للمصفوفة $A$؟", "a": "$det(A - \\lambda I) = 0$"},
+            {"q": "مجموع القيم الذاتية للمصفوفة $A$ يساوي _____؟", "a": "أثر المصفوفة $trace(A)$ (مجموع عناصر القطر الرئيسي)."},
+            {"q": "جداء القيم الذاتية للمصفوفة $A$ يساوي _____؟", "a": "محدد المصفوفة $|A|$."},
+            {"q": "متى نقول أن المصفوفة $A$ قابلة للتقطير (Diagonalizable)؟", "a": "إذا وجدت مصفوفة غير شاذة $P$ بحيث تكون $P^{-1}AP$ مصفوفة قطرية."},
+            {"q": "لكي تكون المصفوفة $A$ من المرتبة $n$ قابلة للتقطير، يجب أن تمتلك _____؟", "a": "$n$ شعاع ذاتي مستقل خطياً."}
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+        let currentFontSize = 19;
+
+        const cardElement = document.querySelector('.card');
+        const frontContent = document.getElementById('card-front-content');
+        const backContent = document.getElementById('card-back-content');
+        const countSpan = document.getElementById('current-index');
+        const totalSpan = document.getElementById('total-count');
+        const progressBar = document.getElementById('progress-bar');
+
+        function init() {
+            totalSpan.textContent = flashcardsData.length;
+            renderCard();
+        }
+
+        function updateProgress() {
+            const percentage = ((currentIndex + 1) / flashcardsData.length) * 100;
+            progressBar.style.width = percentage + '%';
+        }
+
+        function renderCard() {
+            const data = flashcardsData[currentIndex];
+            
+            if(isFlipped) {
+                cardElement.classList.remove('is-flipped');
+                isFlipped = false;
+                setTimeout(() => updateContent(data), 300);
+            } else {
+                updateContent(data);
+            }
+        }
+
+        function updateContent(data) {
+            frontContent.innerHTML = data.q;
+            backContent.innerHTML = data.a;
+            countSpan.textContent = currentIndex + 1;
+            updateProgress();
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([frontContent, backContent]).catch((err) => console.log(err));
+            }
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            cardElement.classList.toggle('is-flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < flashcardsData.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            renderCard();
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = flashcardsData.length - 1;
+            }
+            renderCard();
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                icon.textContent = '☀';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '🌙';
+            }
+        }
+
+        function adjustFont(change) {
+            currentFontSize += change;
+            if (currentFontSize < 15) currentFontSize = 15;
+            if (currentFontSize > 28) currentFontSize = 28;
+            document.documentElement.style.setProperty('--base-font-size', currentFontSize + 'px');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') nextCard();
+            if (e.key === 'ArrowRight') prevCard();
+            if (e.key === ' ' || e.key === 'Enter') flipCard();
+        });
+
+        window.onload = init;
+    </script>
+</body>
+</html>
